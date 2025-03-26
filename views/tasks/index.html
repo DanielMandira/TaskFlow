@@ -72,7 +72,7 @@
           <a href="{{ url_for('routes.edit', id=task.id) }}" class="btn-icon" title="Editar">
             <i class="fas fa-edit"></i>
           </a>
-          <a action="{{ url_for('routes.delete', id=task.id) }}" method="POST" style="display: inline;">
+          <form action="{{ url_for('routes.delete', id=task.id) }}" method="POST" style="display: inline;">
             <button type="submit" class="btn-icon" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')">
               <i class="fas fa-trash-alt trash-red"></i>
             </button>

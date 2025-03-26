@@ -40,6 +40,7 @@
   <script>
     // Fechar alertas
     document.querySelectorAll('.alert-close').forEach(button => {
+      setTimeout(() => {button.closest('.alert').style.display = 'none';}, 3500)
       button.addEventListener('click', () => {
         button.closest('.alert').style.display = 'none';
       });
