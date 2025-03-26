@@ -1,0 +1,94 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="filters">
+    <div class="filter-group">
+      <label for="priority-filter">Prioridade:</label>
+      <select id="priority-filter" class="filter-select">
+        <option value="all">Todas</option>
+        <option value="low">Baixa</option>
+        <option value="medium">Média</option>
+        <option value="high">Alta</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="status-filter">Status:</label>
+      <select id="status-filter" class="filter-select">
+        <option value="all">Todos</option>
+        <option value="pending">Pendente</option>
+        <option value="in_progress">Em Progresso</option>
+        <option value="completed">Concluída</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="task-list">
+    {% for task in tasks %}
+    <div class="task-card">
+      <div class="task-header">
+        <h3 class="task-title">{{ task.title }}</h3>
+        <span class="task-priority priority-{{ task.priority }}">
+          {{ task.priority|upper }}
+        </span>
+      </div>
+      
+      {% if task.description %}
+      <p class="task-description">{{ task.description[:100] }}{% if task.description|length > 100 %}...{% endif %}</p>
+      {% endif %}
+      
+      <div class="task-info">
+        <div class="task-dates">
+          <span class="info-label">
+            <i class="fas fa-calendar-day"></i> Início:
+          </span>
+          <span>{{ task.start_date.strftime('%d/%m/%Y') }}</span>
+          {% if task.end_date %}
+          <span class="info-label">
+            <i class="fas fa-calendar-check"></i> Término:
+          </span>
+          <span>{{ task.end_date.strftime('%d/%m/%Y') }}</span>
+          {% endif %}
+        </div>
+        
+        {% if task.estimated_hours %}
+        <div class="task-hours">
+          <i class="fas fa-clock"></i>
+          {{ task.estimated_hours }}h estimadas
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="task-meta">
+        <span class="task-status status-{{ task.status }}">
+          <i class="fas fa-{% if task.status == 'completed' %}check-circle{% elif task.status == 'in_progress' %}spinner{% else %}clock{% endif %}"></i>
+          {{ task.status|upper|replace('_', ' ') }}
+        </span>
+        <div class="task-actions">
+          <a href="{{ url_for('routes.detail', id=task.id) }}" class="btn-icon" title="Ver detalhes">
+            <i class="fas fa-eye"></i>
+          </a>
+          <a href="{{ url_for('routes.edit', id=task.id) }}" class="btn-icon" title="Editar">
+            <i class="fas fa-edit"></i>
+          </a>
+          <a action="{{ url_for('routes.delete', id=task.id) }}" method="POST" style="display: inline;">
+            <button type="submit" class="btn-icon" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')">
+              <i class="fas fa-trash-alt trash-red"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="no-tasks">
+      <i class="fas fa-tasks"></i>
+      <p>Nenhuma tarefa encontrada.</p>
+      <a href="{{ url_for('routes.create') }}" class="btn btn-add">Criar Nova Tarefa</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
